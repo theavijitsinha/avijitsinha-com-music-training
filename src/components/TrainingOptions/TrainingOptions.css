@@ -1,0 +1,80 @@
+.controls {
+  background-color: #141414;
+  position: relative;
+  width: 35rem;
+  max-width: 50vw;
+  height: 100vh;
+  overflow-y: auto;
+  transition: transform 0.25s ease-in-out;
+}
+
+@supports (height: 100dvh) {
+  .controls {
+    height: 100dvh;
+  }
+}
+
+.controls::-webkit-scrollbar {
+  display: none;
+}
+
+.controls-scroll {
+  width: 100%;
+  box-sizing: border-box;
+  padding-left: 6rem;
+  padding-right: 6rem;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.sidebar-open-button {
+  position: fixed;
+  right: 2rem;
+  top: 2rem;
+}
+
+.sidebar-close-button {
+  position: absolute;
+  right: 2rem;
+  top: 2rem;
+}
+
+.option-button {
+  height: 3rem;
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+}
+
+.option-button>span {
+  font-size: 1.2rem;
+}
+
+.direction-button {
+  width: 100%;
+}
+
+.interval-button {
+  width: 100%;
+}
+
+@media (orientation: portrait) {
+  .controls {
+    position: absolute;
+    max-width: 100vw;
+    right: 0rem;
+    transform: translateX(var(--translate-x-size));
+  }
+
+  .controls-scroll {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (orientation: landscape) {
+
+  .sidebar-close-button,
+  .sidebar-open-button {
+    display: none;
+  }
+}

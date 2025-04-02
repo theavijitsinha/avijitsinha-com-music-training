@@ -1,0 +1,24 @@
+.root-page {
+  min-height: 100vh;
+  width: 100vw;
+  color: #141414;
+}
+
+.intervals-training-page {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  width: 100vw;
+  color: #141414;
+}
+
+@supports (min-height: 100dvh) {
+  .root-page {
+    min-height: 100dvh;
+  }
+
+  .intervals-training-page {
+    min-height: 100dvh;
+  }
+}
