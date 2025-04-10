@@ -7,6 +7,7 @@ import {
   Button,
   Typography,
 } from "antd";
+import random from "random";
 import {
   useEffect,
   useRef,
@@ -139,9 +140,7 @@ function IntervalQuiz(props) {
 
   const getRandomElement = (array) => {
     if (!array.length) return null
-
-    const randomIndex = crypto.getRandomValues(new Uint32Array(1))[0] % array.length
-    return array[randomIndex]
+    return random.choice(array)
   }
 
   const generateNotesPair = () => {
