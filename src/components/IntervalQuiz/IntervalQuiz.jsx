@@ -193,9 +193,9 @@ function IntervalQuiz(props) {
 
   const submitAnswer = (semitone) => {
     setChosenSemitone(semitone)
-    setTotalAnswers(totalAnswers + 1)
+    setTotalAnswers(prevTotalAnswers => prevTotalAnswers + 1)
     if (semitone === currentSemitone) {
-      setCorrectAnswers(correctAnswers + 1)
+      setCorrectAnswers(prevCorrectAnswers => prevCorrectAnswers + 1)
     }
   }
 
@@ -296,7 +296,7 @@ function IntervalQuiz(props) {
                 )
               })}
           </div>
-          <div className="score-text">
+          <div key={totalAnswers} className="score-text">
             <Typography.Title
               className="score-text-correct"
               level={3}
