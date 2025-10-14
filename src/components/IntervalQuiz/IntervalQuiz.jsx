@@ -33,8 +33,7 @@ function IntervalQuiz(props) {
   const [toneLoaded, setToneLoaded] = useState(false);
   const [audioStarted, setAudioStarted] = useState(false);
   const [playerStarted, setPlayerStarted] = useState(false);
-  const [currentInterval, setCurrentInterval] = useState(null)
-  const [currentSemitone, setCurrentSemitone] = useState(null)
+  const [currentNotesPair, setCurrentNotesPair] = useState(null)
   const [currentDirection, setCurrentDirection] = useState("asc")
   const [semitoneChoices, setSemitoneChoices] = useState(new Set())
   const [chosenSemitone, setChosenSemitone] = useState(null)
@@ -118,9 +117,9 @@ function IntervalQuiz(props) {
     }
   }
 
-  const calculateSecondNote = (note, octave, direction, semitone) => {
-    const rootNoteNumber = notes[note]
-    let secondOctave = octave
+  const calculateSecondNote = (rootNote, direction, semitone) => {
+    const rootNoteNumber = notes[rootNote.note]
+    let secondOctave = rootNote.octave
     let secondNoteNumber = direction === "asc" || direction === "har" ? rootNoteNumber + semitone :
       direction === "des" ? rootNoteNumber - semitone : null
     if (secondNoteNumber >= Object.keys(notes).length) {
@@ -161,7 +160,7 @@ function IntervalQuiz(props) {
       }
     }
     const rootNote = getRandomElement(rootChoices)
-    const secondNote = calculateSecondNote(rootNote.note, rootNote.octave, direction, semitone)
+    const secondNote = calculateSecondNote(rootNote, direction, semitone)
     return {
       rootNote: rootNote,
       secondNote: secondNote,
@@ -169,20 +168,20 @@ function IntervalQuiz(props) {
     }
   }
 
+  const getNoteStr = (note) => {
+    return note.note + String(note.octave)
+  }
+
   const setRandomInterval = () => {
-    const { rootNote, secondNote, semitone } = generateNotesPair()
-    let rootNoteStr = rootNote.note + String(rootNote.octave)
-    let secondNoteStr = secondNote.note + String(secondNote.octave)
-    setCurrentInterval([rootNoteStr, secondNoteStr])
-    setCurrentSemitone(semitone)
+    setCurrentNotesPair(generateNotesPair())
     setCurrentDirection(props.options.direction)
   }
 
-  const playInterval = () => {
+  const playNotesPair = (notesPair) => {
     const timeGap = props.options.timeGap
     const secondNoteDelay = currentDirection === "har" ? 0 : timeGap
-    sampler.current.triggerAttackRelease(currentInterval[0], timeGap, toneNow());
-    sampler.current.triggerAttackRelease(currentInterval[1], timeGap, toneNow() + secondNoteDelay);
+    sampler.current.triggerAttackRelease(getNoteStr(notesPair.rootNote), timeGap, toneNow());
+    sampler.current.triggerAttackRelease(getNoteStr(notesPair.secondNote), timeGap, toneNow() + secondNoteDelay);
   };
 
   const createNewLevel = () => {
@@ -194,7 +193,7 @@ function IntervalQuiz(props) {
   const submitAnswer = (semitone) => {
     setChosenSemitone(semitone)
     setTotalAnswers(prevTotalAnswers => prevTotalAnswers + 1)
-    if (semitone === currentSemitone) {
+    if (semitone === currentNotesPair.semitone) {
       setCorrectAnswers(prevCorrectAnswers => prevCorrectAnswers + 1)
     }
   }
@@ -234,8 +233,8 @@ function IntervalQuiz(props) {
           <Button
             className="play-button"
             type="primary"
-            disabled={!(toneLoaded && audioStarted && (currentInterval !== null))}
-            onClick={playInterval}
+            disabled={!(toneLoaded && audioStarted && (currentNotesPair !== null))}
+            onClick={() => playNotesPair(currentNotesPair)}
             icon={<CaretRightFilled style={{
               fontSize: "2.5rem",
               marginLeft: "0.3rem",
@@ -247,7 +246,7 @@ function IntervalQuiz(props) {
               className="next-button"
               color="primary"
               variant="outlined"
-              disabled={!(toneLoaded && audioStarted && (currentInterval !== null))}
+              disabled={!(toneLoaded && audioStarted && (currentNotesPair !== null))}
               onClick={() => {
                 setInterval(null)
                 createNewLevel()
@@ -267,7 +266,7 @@ function IntervalQuiz(props) {
                 let variant = "outlined"
                 if (chosenSemitone === null) {
                   color = "primary"
-                } else if (interval.semitone === currentSemitone) {
+                } else if (interval.semitone === currentNotesPair.semitone) {
                   style = {
                     backgroundColor: "#6bcb6f",
                   }
@@ -278,6 +277,11 @@ function IntervalQuiz(props) {
                   }
                   variant = "solid"
                 }
+                let notesPair = {
+                  rootNote: currentNotesPair.rootNote,
+                  secondNote: calculateSecondNote(currentNotesPair.rootNote, currentDirection, interval.semitone),
+                  semitone: interval.semitone,
+                }
                 return (
                   <Button
                     key={key}
@@ -286,8 +290,11 @@ function IntervalQuiz(props) {
                     style={style}
                     variant={variant}
                     onClick={() => {
-                      if (chosenSemitone !== null) return;
-                      submitAnswer(interval.semitone)
+                      if (chosenSemitone !== null) {
+                        playNotesPair(notesPair)
+                      } else {
+                        submitAnswer(interval.semitone)
+                      }
                     }}
                     shape="round"
                   >
