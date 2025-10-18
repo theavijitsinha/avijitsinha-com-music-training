@@ -12,7 +12,6 @@ import {
 } from "react-router"
 
 import IntervalQuiz from "./components/IntervalQuiz/IntervalQuiz"
-import TrainingOptions from "./components/TrainingOptions/TrainingOptions"
 import {
   storageBaseKey,
 } from "./constants"
@@ -112,9 +111,6 @@ function IntervalsTrainingPage() {
   return (
     <div className="intervals-training-page">
       <IntervalQuiz
-        options={options}
-      />
-      <TrainingOptions
         options={options}
         setOptions={handleOptionsChange}
       />

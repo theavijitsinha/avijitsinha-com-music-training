@@ -98,30 +98,9 @@ function TrainingOptions(props) {
 
   return (
     <React.Fragment>
-      <Button
-        className="sidebar-open-button"
-        size="large"
-        color="primary"
-        variant="outlined"
-        onClick={() => { setSidebarOpen(true) }}
-        icon={<MenuOutlined />}
-        shape="circle"
-      />
       <div
         className="controls"
-        style={{
-          "--translate-x-size": sidebarOpen ? "0%" : "100%",
-        }}
       >
-        <Button
-          className="sidebar-close-button"
-          size="large"
-          color="primary"
-          variant="outlined"
-          onClick={() => { setSidebarOpen(false) }}
-          icon={<CloseOutlined />}
-          shape="circle"
-        />
         <div className="controls-scroll">
           <Typography.Title
             level={2}
@@ -191,6 +170,15 @@ function TrainingOptions(props) {
             </Button>
           ))}
         </div>
+        <Button
+          className="sidebar-close-button"
+          size="large"
+          color="primary"
+          variant="outlined"
+          onClick={props.onClose}
+          icon={<CloseOutlined />}
+          shape="circle"
+        />
       </div>
     </React.Fragment>
   )

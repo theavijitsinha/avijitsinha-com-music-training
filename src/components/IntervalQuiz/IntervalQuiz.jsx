@@ -26,9 +26,9 @@ import {
   lastOctave,
   notes
 } from "../../constants"
+import MainMenu from "../MainMenu/MainMenu"
 
 import './IntervalQuiz.css'
-import MainMenu from "../MainMenu/MainMenu"
 
 function IntervalQuiz(props) {
   const [toneLoaded, setToneLoaded] = useState(false)
@@ -326,7 +326,11 @@ function IntervalQuiz(props) {
           </div>
         </div>
         :
-        <MainMenu />
+        <MainMenu
+          startTraining={startTraining}
+          options={props.options}
+          setOptions={props.setOptions}
+        />
       }
     </div>
   )
