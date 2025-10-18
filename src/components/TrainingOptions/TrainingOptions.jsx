@@ -1,16 +1,16 @@
 import {
   CloseOutlined,
   MenuOutlined,
-} from "@ant-design/icons";
+} from "@ant-design/icons"
 import {
   Button,
   Select,
   Slider,
   Typography,
-} from "antd";
+} from "antd"
 import React, {
   useState
-} from "react";
+} from "react"
 
 import {
   intervals,
@@ -66,7 +66,7 @@ function TrainingOptions(props) {
       let semitones = new Set(prevOptions.semitones)
       semitones.has(semitone) ?
         semitones.delete(semitone) :
-        semitones.add(semitone);
+        semitones.add(semitone)
       return {
         ...prevOptions,
         semitones: semitones,
@@ -196,4 +196,4 @@ function TrainingOptions(props) {
   )
 }
 
-export default TrainingOptions;
+export default TrainingOptions

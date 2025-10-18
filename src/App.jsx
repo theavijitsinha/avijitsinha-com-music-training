@@ -1,23 +1,23 @@
 import {
   ConfigProvider,
   theme,
-} from "antd";
+} from "antd"
 import {
   useEffect,
   useState,
-} from "react";
+} from "react"
 import {
   createBrowserRouter,
   RouterProvider,
-} from "react-router";
+} from "react-router"
 
-import IntervalQuiz from "./components/IntervalQuiz/IntervalQuiz";
-import TrainingOptions from "./components/TrainingOptions/TrainingOptions";
+import IntervalQuiz from "./components/IntervalQuiz/IntervalQuiz"
+import TrainingOptions from "./components/TrainingOptions/TrainingOptions"
 import {
   storageBaseKey,
-} from "./constants";
+} from "./constants"
 
-import './App.css';
+import './App.css'
 
 function Root() {
   return (
@@ -81,7 +81,7 @@ function IntervalsTrainingPage() {
     options.semitones = new Set(JSON.parse(storedSemitones))
     return options
   }
-  const [options, setOptions] = useState(getInitialOptions());
+  const [options, setOptions] = useState(getInitialOptions())
 
   useEffect(() => {
 
@@ -136,7 +136,7 @@ function App() {
     {
       basename: "/music/training",
     }
-  );
+  )
   return (
     <ConfigProvider
       theme={{
@@ -162,7 +162,7 @@ function App() {
         <RouterProvider router={router} />
       </div>
     </ConfigProvider>
-  );
+  )
 }
 
-export default App;
+export default App
