@@ -1,6 +1,5 @@
 import {
   CloseOutlined,
-  MenuOutlined,
 } from "@ant-design/icons"
 import {
   Button,
@@ -9,7 +8,6 @@ import {
   Typography,
 } from "antd"
 import React, {
-  useState
 } from "react"
 
 import {
@@ -23,8 +21,6 @@ import {
 import './TrainingOptions.css'
 
 function TrainingOptions(props) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-
   const setDirection = (directionKey) => {
     props.setOptions((prevOptions) => ({
       ...prevOptions,
@@ -172,7 +168,6 @@ function TrainingOptions(props) {
         </div>
         <Button
           className="sidebar-close-button"
-          size="large"
           color="primary"
           variant="outlined"
           onClick={props.onClose}

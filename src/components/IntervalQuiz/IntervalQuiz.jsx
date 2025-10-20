@@ -224,7 +224,6 @@ function IntervalQuiz(props) {
         <div className="audio-controls">
           <Button
             className="stop-quiz-button"
-            size="large"
             color="primary"
             variant="outlined"
             onClick={stopTraining}
