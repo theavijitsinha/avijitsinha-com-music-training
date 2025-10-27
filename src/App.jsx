@@ -15,6 +15,9 @@ import IntervalQuiz from "./components/IntervalQuiz/IntervalQuiz"
 import {
   storageBaseKey,
 } from "./constants"
+import {
+  handleGoogleLoginResult,
+} from "./utils/firebase"
 
 import './App.css'
 
@@ -24,7 +27,7 @@ function Root() {
   )
 }
 
-function IntervalsTrainingPage() {
+function IntervalsTrainingPage(props) {
   const currentDataVersion = "0.1.0"
   const intervalOptionsKey = storageBaseKey + ".interval.options"
   const dataVersionKey = intervalOptionsKey + ".dataVersion"
@@ -119,6 +122,10 @@ function IntervalsTrainingPage() {
 }
 
 function App() {
+  useEffect(() => {
+    handleGoogleLoginResult()
+  }, [])
+
   const router = createBrowserRouter([
     {
       path: "",

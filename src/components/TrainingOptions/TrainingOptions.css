@@ -1,7 +1,7 @@
 .controls {
   background-color: #141414;
   border-radius: 1rem;
-  border: 1px solid #313131;
+  border: 2px solid #424242;
   position: absolute;
   top: 0;
   left: 0;
@@ -35,8 +35,9 @@
 
 .sidebar-close-button {
   position: absolute;
-  right: 2rem;
-  top: 2rem;
+  right: 1rem;
+  top: 1.5rem;
+  border-width: 2px;
 }
 
 .option-button {
@@ -46,7 +47,8 @@
 }
 
 .option-button>span {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
+  font-weight: 500;
 }
 
 .direction-button {
