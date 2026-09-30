@@ -27,25 +27,24 @@ const auth = getAuth(app);
 
 export function signInWithGoogleRedirect() {
   const provider = new GoogleAuthProvider();
-  signInWithRedirect(auth, provider);
+  return signInWithRedirect(auth, provider)
+    .catch(() => {
+      console.error("Google sign-in could not be started.");
+    });
 }
 
 export function handleGoogleLoginResult() {
-  getRedirectResult(auth)
-    .then((result) => {
-      if (!result) return; // user may already be signed in or no redirect pending
-      const user = result.user;
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      console.log("Signed in as:", user.displayName);
-      console.log("ID Token:", credential?.idToken);
-    })
-    .catch((error) => {
-      console.error("Redirect sign-in error:", error);
+  return getRedirectResult(auth)
+    .catch(() => {
+      console.error("Google sign-in could not be completed.");
     });
 }
 
 export function signOutUser() {
-  signOut(auth);
+  return signOut(auth)
+    .catch(() => {
+      console.error("Google sign-out could not be completed.");
+    });
 };
 
 const AuthContext = createContext();
@@ -69,19 +68,4 @@ export function AuthProvider({ children }) {
 
 export function useAuth() {
   return useContext(AuthContext);
-}
-
-async function callApi(path, options = {}) {
-  const user = auth.currentUser;
-  if (!user) throw new Error("Not signed in");
-  const idToken = await user.getIdToken();
-  const res = await fetch(path, {
-    ...options,
-    headers: {
-      ...options.headers,
-      Authorization: `Bearer ${idToken}`,
-      "Content-Type": "application/json",
-    },
-  });
-  return res.json();
 }
