@@ -3,7 +3,6 @@ import {
   theme,
 } from "antd"
 import {
-  useEffect,
   useState,
 } from "react"
 import {
@@ -15,10 +14,6 @@ import IntervalQuiz from "./components/IntervalQuiz/IntervalQuiz"
 import {
   storageBaseKey,
 } from "./constants"
-import {
-  handleGoogleLoginResult,
-} from "./utils/firebase"
-
 import './App.css'
 
 function Root() {
@@ -85,10 +80,6 @@ function IntervalsTrainingPage(props) {
   }
   const [options, setOptions] = useState(getInitialOptions())
 
-  useEffect(() => {
-
-  }, [])
-
   const handleOptionsChange = (changeFunc) => {
     const currentOptions = options
     const newOptions = changeFunc(options)
@@ -122,10 +113,6 @@ function IntervalsTrainingPage(props) {
 }
 
 function App() {
-  useEffect(() => {
-    handleGoogleLoginResult()
-  }, [])
-
   const router = createBrowserRouter([
     {
       path: "",

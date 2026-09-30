@@ -11,10 +11,8 @@ import {
 
 import TrainingOptions from "../TrainingOptions/TrainingOptions"
 import {
-  signInWithGoogleRedirect,
-  signOutUser,
-  useAuth,
-} from "../../utils/firebase"
+  useAccount,
+} from "../../utils/account-context"
 
 import googleLogo from "../../assets/google.svg"
 
@@ -25,11 +23,41 @@ const {
   Text
 } = Typography
 
+function ProfileAvatar({ user, className }) {
+  if (user.pictureUrl) {
+    return (
+      <img
+        alt=""
+        className={className}
+        referrerPolicy="no-referrer"
+        src={user.pictureUrl}
+      />
+    )
+  }
+  const label = user.displayName || user.email || "Account"
+  return (
+    <span
+      aria-hidden="true"
+      className={`${className} profile-avatar-fallback`}
+    >
+      {label.slice(0, 1).toUpperCase()}
+    </span>
+  )
+}
+
 function MainMenu(props) {
   const [isOptionsOpen, setIsOptionsOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
 
-  const { authUser, authLoading } = useAuth()
+  const {
+    accountUser,
+    accountLoading,
+    accountBusy,
+    accountError,
+    refreshAccount,
+    signIn,
+    signOut,
+  } = useAccount()
 
   return (
     <div
@@ -61,14 +89,14 @@ function MainMenu(props) {
         Options
       </Button>
       {
-        authUser === null ?
+        accountUser === null ?
           <Button
             color="primary"
             variant="outlined"
             className="menu-button google-login-button"
             shape="round"
-            disabled={authLoading}
-            onClick={signInWithGoogleRedirect}
+            disabled={accountLoading || accountBusy}
+            onClick={signIn}
           >
             <img
               className="google-login-button-icon"
@@ -79,61 +107,54 @@ function MainMenu(props) {
           null
       }
       {
-        authUser ?
-          <div
+        accountUser ?
+          <button
+            aria-label="Open account profile"
             className="profile-info"
+            disabled={accountBusy}
             onClick={() => setIsProfileOpen(true)}
+            type="button"
           >
             <Text
               className="profile-info-name"
             >
               {
-                authUser.displayName || authUser.email || ""
+                accountUser.displayName || accountUser.email || "Account"
               }
             </Text>
-            <img
+            <ProfileAvatar
               className="profile-info-photo"
-              src={
-                authUser.photoURL ||
-                "https://ui-avatars.com/api/?name=" + encodeURIComponent(
-                  authUser.displayName || authUser.email || "?"
-                )
-              }
+              user={accountUser}
             />
-          </div>
+          </button>
           :
           null
       }
       {
-        authUser && isProfileOpen ?
+        accountUser && isProfileOpen ?
           <div
             className="profile-view"
           >
             <div
               className="profile-view-photo-container"
             >
-              <img
+              <ProfileAvatar
                 className="profile-view-photo"
-                src={
-                  authUser.photoURL ||
-                  "https://ui-avatars.com/api/?name=" + encodeURIComponent(
-                    authUser.displayName || authUser.email || "?"
-                  )
-                }
+                user={accountUser}
               />
             </div>
             <Text
               className="profile-view-name"
             >
               {
-                authUser.displayName || "Anonymous"
+                accountUser.displayName || "Google account"
               }
             </Text>
             <Text
               className="profile-view-email"
             >
               {
-                authUser.email || ""
+                accountUser.email || ""
               }
             </Text>
             <Button
@@ -141,7 +162,8 @@ function MainMenu(props) {
               variant="outlined"
               className="menu-button"
               shape="round"
-              onClick={signOutUser}
+              disabled={accountBusy}
+              onClick={() => { void signOut() }}
             >
               Sign out
             </Button>
@@ -156,6 +178,20 @@ function MainMenu(props) {
 
           </div> :
           null
+      }
+      {
+        accountError ?
+          <div className="account-status" role="status">
+            <Text>{accountError}</Text>
+            <Button
+              disabled={accountLoading || accountBusy}
+              onClick={() => { void refreshAccount() }}
+              type="link"
+            >
+              Retry
+            </Button>
+          </div>
+          : null
       }
       {
         isOptionsOpen ?

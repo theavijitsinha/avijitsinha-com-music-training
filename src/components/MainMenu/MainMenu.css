@@ -40,6 +40,10 @@
 }
 
 .profile-info {
+  appearance: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
   display: flex;
   align-items: center;
   position: fixed;
@@ -54,6 +58,16 @@
   cursor: pointer;
 }
 
+.profile-info:focus-visible {
+  outline: 3px solid #c3e3ff;
+  outline-offset: 3px;
+}
+
+.profile-info:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
 .profile-info-name {
   padding-left: 0.7rem;
   padding-right: 0.5rem;
@@ -65,6 +79,9 @@
 }
 
 .profile-info-photo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   height: 100%;
   aspect-ratio: 1/1;
   object-fit: cover;
@@ -92,10 +109,35 @@
 }
 
 .profile-view-photo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   height: 100%;
   aspect-ratio: 1/1;
   object-fit: cover;
   border-radius: 50%;
+}
+
+.profile-avatar-fallback {
+  background: #c3e3ff;
+  color: #141414;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.profile-info-photo.profile-avatar-fallback {
+  font-size: 1rem;
+}
+
+.account-status {
+  position: fixed;
+  bottom: 0.5rem;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 
 .profile-view-photo-container {
