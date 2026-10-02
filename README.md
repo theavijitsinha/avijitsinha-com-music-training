@@ -2,13 +2,15 @@
 
 Music Training is a React/Vite interval-training application served at `/music/training/` through the `avijitsinha.com` reverse proxy. Training options stay in browser-local storage.
 
-**Deployment status:** production Cloud Run revision `music-training-00013-9ms` runs the common-account client from commit `adf7737`. The Account and reverse-proxy routes were deployed first, then the public bundle was verified to reference only `/account/`, `/api/account/me` and `/api/account/logout` for identity lifecycle. The release contains no Firebase client dependency or provider credential handling.
+**Deployment status:** production is returning to the application's standalone Firebase Google sign-in before the shared account service is retired. The app uses Firebase only for optional Music Training identity and never treats browser identity as a backend authorization boundary.
 
-The application reads sign-in state from the common `avijitsinha.com` account API. **Sign in with Google** opens `/account/`, and sign-out revokes the current shared browser session. Music Training does not persist Firebase identity state or handle Google credentials. The common session remains in secure host-only cookies owned by the account service.
+**Sign in with Google** uses the site's existing Firebase project and `music-training` OAuth client. Firebase owns its browser authentication state; Music Training does not send that identity to Routine Dashboard or any application database. Credential and token values are never logged.
 
 Music Training requires only common identity. It does not request, receive, store or use Google Calendar or Tasks access. Those permissions remain optional and service-specific.
 
-The account client accepts only a bounded display name, email and Google-hosted HTTPS picture URL from `/api/account/me`; it never receives a site user ID or Google provider identifier. Missing or untrusted profile pictures render locally rather than sending identity data to an avatar service. The packaged application sets restrictive content, framing, referrer, MIME-sniffing and permissions headers.
+Only Google-hosted HTTPS profile pictures are rendered. Missing or untrusted profile pictures use a local fallback rather than sending identity data to another avatar service. The packaged application sets restrictive content, framing, referrer, MIME-sniffing and permissions headers.
+
+Firebase's unused bundled Firestore dependency is pinned through an npm override to a patched compatible `@grpc/grpc-js` release. Music Training imports only Firebase Auth.
 
 ## Local development
 
@@ -25,4 +27,4 @@ npm test
 npm run build
 ```
 
-The account-integration files pass lint. Repository-wide lint currently also reports five pre-existing issues in the training option/quiz code; they are outside this authentication slice.
+Repository-wide lint currently reports five pre-existing issues in the training option/quiz code; they are outside this authentication rollback.

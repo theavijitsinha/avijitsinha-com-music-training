@@ -11,8 +11,10 @@ import {
 
 import TrainingOptions from "../TrainingOptions/TrainingOptions"
 import {
-  useAccount,
-} from "../../utils/account-context"
+  signInWithGoogleRedirect,
+  signOutUser,
+  useAuth,
+} from "../../utils/firebase"
 
 import googleLogo from "../../assets/google.svg"
 
@@ -23,18 +25,29 @@ const {
   Text
 } = Typography
 
+function googleProfilePhoto(user) {
+  if (!user.photoURL) return null
+  try {
+    const url = new URL(user.photoURL)
+    return url.protocol === "https:" && url.hostname === "lh3.googleusercontent.com" ? url.toString() : null
+  } catch {
+    return null
+  }
+}
+
 function ProfileAvatar({ user, className }) {
-  if (user.pictureUrl) {
+  const photoUrl = googleProfilePhoto(user)
+  if (photoUrl) {
     return (
       <img
         alt=""
         className={className}
         referrerPolicy="no-referrer"
-        src={user.pictureUrl}
+        src={photoUrl}
       />
     )
   }
-  const label = user.displayName || user.email || "Account"
+  const label = user.displayName || user.email || "Google account"
   return (
     <span
       aria-hidden="true"
@@ -49,15 +62,7 @@ function MainMenu(props) {
   const [isOptionsOpen, setIsOptionsOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
 
-  const {
-    accountUser,
-    accountLoading,
-    accountBusy,
-    accountError,
-    refreshAccount,
-    signIn,
-    signOut,
-  } = useAccount()
+  const { authUser, authLoading } = useAuth()
 
   return (
     <div
@@ -89,14 +94,14 @@ function MainMenu(props) {
         Options
       </Button>
       {
-        accountUser === null ?
+        authUser === null ?
           <Button
             color="primary"
             variant="outlined"
             className="menu-button google-login-button"
             shape="round"
-            disabled={accountLoading || accountBusy}
-            onClick={signIn}
+            disabled={authLoading}
+            onClick={() => { void signInWithGoogleRedirect() }}
           >
             <img
               className="google-login-button-icon"
@@ -107,11 +112,10 @@ function MainMenu(props) {
           null
       }
       {
-        accountUser ?
+        authUser ?
           <button
             aria-label="Open account profile"
             className="profile-info"
-            disabled={accountBusy}
             onClick={() => setIsProfileOpen(true)}
             type="button"
           >
@@ -119,19 +123,19 @@ function MainMenu(props) {
               className="profile-info-name"
             >
               {
-                accountUser.displayName || accountUser.email || "Account"
+                authUser.displayName || authUser.email || "Google account"
               }
             </Text>
             <ProfileAvatar
               className="profile-info-photo"
-              user={accountUser}
+              user={authUser}
             />
           </button>
           :
           null
       }
       {
-        accountUser && isProfileOpen ?
+        authUser && isProfileOpen ?
           <div
             className="profile-view"
           >
@@ -140,21 +144,21 @@ function MainMenu(props) {
             >
               <ProfileAvatar
                 className="profile-view-photo"
-                user={accountUser}
+                user={authUser}
               />
             </div>
             <Text
               className="profile-view-name"
             >
               {
-                accountUser.displayName || "Google account"
+                authUser.displayName || "Google account"
               }
             </Text>
             <Text
               className="profile-view-email"
             >
               {
-                accountUser.email || ""
+                authUser.email || ""
               }
             </Text>
             <Button
@@ -162,8 +166,7 @@ function MainMenu(props) {
               variant="outlined"
               className="menu-button"
               shape="round"
-              disabled={accountBusy}
-              onClick={() => { void signOut() }}
+              onClick={() => { void signOutUser() }}
             >
               Sign out
             </Button>
@@ -178,20 +181,6 @@ function MainMenu(props) {
 
           </div> :
           null
-      }
-      {
-        accountError ?
-          <div className="account-status" role="status">
-            <Text>{accountError}</Text>
-            <Button
-              disabled={accountLoading || accountBusy}
-              onClick={() => { void refreshAccount() }}
-              type="link"
-            >
-              Retry
-            </Button>
-          </div>
-          : null
       }
       {
         isOptionsOpen ?

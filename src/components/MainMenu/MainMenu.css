@@ -129,17 +129,6 @@
   font-size: 1rem;
 }
 
-.account-status {
-  position: fixed;
-  bottom: 0.5rem;
-  left: 50%;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  transform: translateX(-50%);
-  white-space: nowrap;
-}
-
 .profile-view-photo-container {
   margin-bottom: 2rem;
   padding: 0.2rem;

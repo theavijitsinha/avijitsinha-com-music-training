@@ -3,6 +3,7 @@ import {
   theme,
 } from "antd"
 import {
+  useEffect,
   useState,
 } from "react"
 import {
@@ -14,6 +15,9 @@ import IntervalQuiz from "./components/IntervalQuiz/IntervalQuiz"
 import {
   storageBaseKey,
 } from "./constants"
+import {
+  handleGoogleLoginResult,
+} from "./utils/firebase"
 import './App.css'
 
 function Root() {
@@ -113,6 +117,10 @@ function IntervalsTrainingPage(props) {
 }
 
 function App() {
+  useEffect(() => {
+    void handleGoogleLoginResult()
+  }, [])
+
   const router = createBrowserRouter([
     {
       path: "",
