@@ -2,9 +2,9 @@
 
 Music Training is a React/Vite interval-training application served at `/music/training/` through the `avijitsinha.com` reverse proxy. Training options stay in browser-local storage.
 
-**Deployment status:** production is returning to the application's standalone Firebase Google sign-in before the shared account service is retired. The app uses Firebase only for optional Music Training identity and never treats browser identity as a backend authorization boundary.
+**Deployment status:** production revision `music-training-00014-gc2` uses the application's standalone Firebase Google sign-in. The shared account service is retired. The app uses Firebase only for optional Music Training identity and never treats browser identity as a backend authorization boundary.
 
-**Sign in with Google** uses the site's existing Firebase project and `music-training` OAuth client. Firebase owns its browser authentication state; Music Training does not send that identity to Routine Dashboard or any application database. Credential and token values are never logged.
+**Sign in with Google** uses the site's existing Firebase project, `music-training` Web App registration and `music-training` OAuth client. Firebase owns its browser authentication state; Music Training does not send that identity to Routine Dashboard or any application database. Credential and token values are never logged.
 
 Music Training requires only common identity. It does not request, receive, store or use Google Calendar or Tasks access. Those permissions remain optional and service-specific.
 
